@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+            position: relative;
+            min-height: 100vh;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTzXltAMqIoqoNnIfxWkBGmkqNJ0HqEnPSxg&s') no-repeat center center;
+            background-size: cover;
+            background-attachment: scroll;
+            background-color: #000; /* Fallback color */
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input, textarea {
+            padding: 10px;
+            margin: 10px 0;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #weatherInfo {
+            margin-top: 20px;
+        }
+
+        #weatherInfo h2, #weatherInfo p {
+            margin: 5px 0;
+        }
+
+        .notifications {
+            margin-bottom: 20px;
+        }
+
+        button + button {
+            margin-top: 10px;
+        }
+
+        #weatherIcon {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
+
+        #comments {
+            margin-top: 20px;
+        }
+
+        #commentInput {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        #postCommentBtn {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        #commentsContainer {
+            margin-top: 10px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .comment {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            color: black;
+        }
+
+        .comment p {
+            margin: 0;
+        }
+
+        .comment small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .comment .deleteCommentBtn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .comment .deleteCommentBtn:hover {
+            background: darkred;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            color: white;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+body.sunny {
+    background-image: url('https://wallpapers.com/images/hd/sunny-day-wallpaper-atm3m241kozsqjbq.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFD700; /* Fallback color */
+}
+
+body.clouds {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Cloudy_sky_%2826171935906%29.jpg/1024px-Cloudy_sky_%2826171935906%29.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #B0C4DE; /* Fallback color */
+}
+
+body.rain {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbTG_TZeLYDciPpyqRomIqEOQkvqVNLdyQPA&s');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #4682B4; /* Fallback color */
+}
+
+body.clearsky {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMhdSwkUdV-3OCzLdby_oyNwL80kKkDJQvQQ&s');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #87CEEB; /* Fallback color */
+}
+
+body.few_clouds {
+    background-image: url('few_clouds.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #B0C4DE; /* Fallback color */
+}
+
+body.overcast_clouds {
+    background-image: url('overcast_clouds.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #A9A9A9; /* Fallback color */
+}
+
+body.scattered_clouds {
+    background-image: url('scattered_clouds.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #D3D3D3; /* Fallback color */
+}
+
+body.moderate_rain {
+    background-image: url('moderate_rain.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #5F9EA0; /* Fallback color */
+}
+
+body.light_rain {
+    background-image: url('https://myrepublica.nagariknetwork.com/uploads/media/rain_20210802140558.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #ADD8E6; /* Fallback color */
+}
+
+body.broken_clouds {
+    background-image: url('broken_clouds.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #808080; /* Fallback color */
+}
+
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            input, textarea, button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            #weatherIcon {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather App</h1>
+    </header>
+    <div class="container">
+        <input type="text" id="locationInput" placeholder="Enter location">
+        <button id="getWeatherBtn">Get Weather</button>
+        <div id="weatherInfo">
+            <h2 id="locationName"></h2>
+            <p id="temperature"></p>
+            <img id="weatherIcon" alt="Weather Icon" />
+            <p id="conditions"></p>
+            <p id="humidity"></p>
+            <p id="windSpeed"></p>
+        </div>
+
+        <div class="notifications">
+            <h2>Set Custom Notifications</h2>
+            <input type="text" id="notificationInput" placeholder="Enter condition (e.g., rain)">
+            <button id="setNotificationBtn">Set Notification</button>
+        </div>
+
+        <button id="getCurrentLocationBtn">Get Weather by Current Location</button>
+
+        <div id="comments">
+            <h2>Comments</h2>
+            <textarea id="commentInput" placeholder="Enter your comment"></textarea>
+            <button id="postCommentBtn">Post Comment</button>
+            <div id="commentsContainer"></div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 WeatherApp. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('getWeatherBtn').addEventListener('click', function() {
+            const location = document.getElementById('locationInput').value;
+            if (location) {
+                getWeather(location);
+            } else {
+                alert('Please enter a location');
+            }
+        });
+
+        document.getElementById('setNotificationBtn').addEventListener('click', function() {
+            const condition = document.getElementById('notificationInput').value.toLowerCase();
+            if (condition) {
+                localStorage.setItem('weatherNotification', condition);
+                alert(`Notification set for ${condition}`);
+            } else {
+                alert('Please enter a condition');
+            }
+        });
+
+        document.getElementById('getCurrentLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    getWeatherByCoordinates(lat, lon);
+                }, () => {
+                    alert('Unable to retrieve your location');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        document.getElementById('postCommentBtn').addEventListener('click', function() {
+            const commentInput = document.getElementById('commentInput').value;
+            if (commentInput) {
+                postComment(commentInput);
+                document.getElementById('commentInput').value = ''; // Clear input field after posting
+            } else {
+                alert('Please enter a comment');
+            }
+        });
+
+        function postComment(commentText) {
+            const commentsContainer = document.getElementById('commentsContainer');
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment';
+            const timestamp = new Date().toLocaleString();
+            commentElement.innerHTML = `
+                <p>${commentText}</p>
+                <small>${timestamp}</small>
+                <button class="deleteCommentBtn">Delete</button>
+            `;
+            commentsContainer.appendChild(commentElement);
+
+            commentElement.querySelector('.deleteCommentBtn').addEventListener('click', function() {
+                commentsContainer.removeChild(commentElement);
+                removeCommentFromStorage(commentText, timestamp);
+            });
+
+            saveCommentToStorage(commentText, timestamp);
+        }
+
+        function saveCommentToStorage(commentText, timestamp) {
+            let comments = localStorage.getItem('comments');
+            comments = comments ? JSON.parse(comments) : [];
+            comments.push({ text: commentText, timestamp });
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        function removeCommentFromStorage(commentText, timestamp) {
+            let comments = JSON.parse(localStorage.getItem('comments'));
+            comments = comments.filter(comment => comment.text !== commentText || comment.timestamp !== timestamp);
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        function getWeather(location) {
+            const apiKey = '6a6dddc399c508ea97c9d5a09fa9bd17'; 
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === 200) {
+                        displayWeatherData(data);
+                    } else {
+                        alert('Location not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Error fetching weather data');
+                });
+        }
+
+        function getWeatherByCoordinates(lat, lon) {
+            const apiKey = '6a6dddc399c508ea97c9d5a09fa9bd17'; 
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === 200) {
+                        displayWeatherData(data);
+                    } else {
+                        alert('Location not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Error fetching weather data');
+                });
+        }
+
+        function displayWeatherData(data) {
+            document.getElementById('locationName').textContent = data.name;
+            document.getElementById('temperature').textContent = `Temperature: ${data.main.temp}°C`;
+            document.getElementById('conditions').textContent = `Conditions: ${data.weather[0].description}`;
+            document.getElementById('humidity').textContent = `Humidity: ${data.main.humidity}%`;
+            document.getElementById('windSpeed').textContent = `Wind Speed: ${data.wind.speed} m/s`;
+
+            const weatherCondition = data.weather[0].main.toLowerCase();
+            document.body.className = ''; 
+            document.body.classList.add(weatherCondition);
+
+            const iconCode = data.weather[0].icon;
+            const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+            document.getElementById('weatherIcon').src = iconUrl;
+
+            const notificationCondition = localStorage.getItem('weatherNotification');
+            if (notificationCondition && weatherCondition.includes(notificationCondition)) {
+                alert(`Notification: Current weather is ${weatherCondition}`);
+            }
+        }
+
+        function displayComments() {
+            const commentsContainer = document.getElementById('commentsContainer');
+            commentsContainer.innerHTML = ''; 
+
+            let comments = localStorage.getItem('comments');
+            comments = comments ? JSON.parse(comments) : [];
+
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+
+                commentElement.innerHTML = `
+                    <p>${comment.text}</p>
+                    <small>${comment.timestamp}</small>
+                    <button class="deleteCommentBtn">Delete</button>
+                `;
+                commentsContainer.appendChild(commentElement);
+
+                commentElement.querySelector('.deleteCommentBtn').addEventListener('click', function() {
+                    commentsContainer.removeChild(commentElement);
+                    removeCommentFromStorage(comment.text, comment.timestamp);
+                });
+            });
+        }
+
+        displayComments();
+    </script>
+</body>
+</html>
